@@ -1,7 +1,9 @@
 # Python imports
 import locale
 import math
+import sys
 import uuid
+
 
 # django imports
 from django.contrib.contenttypes import generic
@@ -898,21 +900,21 @@ class Product(models.Model):
         See lfs.plugins.PriceCalculator
         """
         pc = self.get_price_calculator(request)
-        return pc.get_base_packing_price(with_properties)
+        return pc.get_base_packing_price(with_properties, amount)
 
     def get_base_packing_price_net(self, request, with_properties=True, amount=1):
         """
         See lfs.plugins.PriceCalculator
         """
         pc = self.get_price_calculator(request)
-        return pc.get_base_packing_price_net(with_properties)
+        return pc.get_base_packing_price_net(with_properties, amount)
 
     def get_base_packing_price_gross(self, request, with_properties=True, amount=1):
         """
         See lfs.plugins.PriceCalculator
         """
         pc = self.get_price_calculator(request)
-        return pc.get_base_packing_price_gross(with_properties)
+        return pc.get_base_packing_price_gross(with_properties, amount)
 
     # TODO: Check whether there is a test case for that and write one if not.
     def get_for_sale(self):
@@ -1492,7 +1494,7 @@ class Product(models.Model):
         cheapest_variant = None
         min_price = None
         for variant in Product.objects.filter(parent=self):
-            price = variant.get_base_price_gross(request)
+            price = variant.get_base_price_gross(request, amount=sys.maxint)
             if price == 0:
                 continue
             if (min_price is None) or (price < min_price):
@@ -1512,7 +1514,7 @@ class Product(models.Model):
 
         prices = []
         for variant in Product.objects.filter(parent=product, active=True):
-            price = variant.get_for_sale_price_gross(request)
+            price = variant.get_for_sale_price_gross(request, amount=sys.maxint)
             if price not in prices:
                 prices.append(price)
 
@@ -1532,7 +1534,7 @@ class Product(models.Model):
         """
         prices = []
         for variant in Product.objects.filter(parent=self, active=True):
-            price = variant.get_standard_price_gross(request)
+            price = variant.get_standard_price_gross(request, amount=sys.maxint)
             if price not in prices:
                 prices.append(price)
 
@@ -1552,7 +1554,7 @@ class Product(models.Model):
         """
         prices = []
         for variant in Product.objects.filter(parent=self, active=True):
-            price = variant.get_price_gross(request)
+            price = variant.get_price_gross(request, amount=sys.maxint)
             if price not in prices:
                 prices.append(price)
 
@@ -1572,7 +1574,7 @@ class Product(models.Model):
         """
         prices = []
         for variant in Product.objects.filter(parent=self, active=True):
-            price = float("%.2f" % variant.get_base_price_gross(request))
+            price = float("%.2f" % variant.get_base_price_gross(request, amount=sys.maxint))
             if price not in prices:
                 prices.append(price)
 
