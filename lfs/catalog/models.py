@@ -1515,8 +1515,13 @@ class Product(models.Model):
             if price not in prices:
                 prices.append(price)
 
-            return {
-            "price": min(prices),
+        if prices:
+            price = min(prices)
+        else:
+            price = 0.0
+
+        return {
+            "price": price,
             "starting_from": len(prices) > 1,
         }
 
@@ -1530,8 +1535,13 @@ class Product(models.Model):
             if price not in prices:
                 prices.append(price)
 
+        if prices:
+            price = min(prices)
+        else:
+            price = 0.0
+
         return {
-            "price": min(prices),
+            "price": price,
             "starting_from": len(prices) > 1,
         }
 
@@ -1545,8 +1555,13 @@ class Product(models.Model):
             if price not in prices:
                 prices.append(price)
 
+        if prices:
+            price = min(prices)
+        else:
+            price = 0.0
+
         return {
-            "price": min(prices),
+            "price": price,
             "starting_from": len(prices) > 1,
         }
 
@@ -1560,8 +1575,13 @@ class Product(models.Model):
             if price not in prices:
                 prices.append(price)
 
+        if prices:
+            price = min(prices)
+        else:
+            price = 0.0
+
         return {
-            "price": min(prices),
+            "price": price,
             "starting_from": len(prices) > 1,
         }
 
