@@ -1890,9 +1890,13 @@ class PropertyGroup(models.Model):
 
     products
           The assigned products of the property group.
+
+    uid
+        Universally unique identifier.
     """
     name = models.CharField(_(u"Name"), blank=True, max_length=50)
     products = models.ManyToManyField(Product, verbose_name=_(u"Products"), related_name="property_groups")
+    uid = models.CharField(max_length=50, editable=False, unique=True, default=get_unique_id_str)
 
     class Meta:
         ordering = ("name", )

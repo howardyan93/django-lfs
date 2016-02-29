@@ -49,11 +49,19 @@ class Command(BaseCommand):
     def migrate_to_08(self, application, version):
         print "Migrating to 0.8"
         from lfs.catalog.models import Property
+        from lfs.catalog.models import PropertyGroup
+        import uuid
         db.add_column("catalog_property", "variants", models.BooleanField(_(u"For Variants"), default=False))
         db.delete_column("catalog_property", "display_no_results")
         for prop in Property.objects.all():
             prop.variants = True
             prop.save()
+
+        db.add_column("catalog_propertygroup", "uid", models.CharField(_(u"For Variants"), unique=True, null=True))
+
+        for group in PropertyGroup.objects.all():
+            group.uid = str(uuid.uuid4())
+            group.save()
 
         application.version = "0.8"
         application.save()
