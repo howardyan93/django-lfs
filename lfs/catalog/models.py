@@ -1135,6 +1135,11 @@ class Product(models.Model):
         except KeyError:
             return False
 
+    def get_parent(self):
+        if self.is_variant():
+            return self.parent
+        return self
+
     def get_default_properties_price(self):
         """
         Returns the total price of all default properties.
@@ -1173,7 +1178,7 @@ class Product(models.Model):
         in settings.
         """
         if self.is_variant() and (self.price_calculator is None):
-            obj = self.get_parent()
+            obj = self.parent
         else:
             obj = self
 

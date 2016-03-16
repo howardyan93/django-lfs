@@ -833,34 +833,6 @@ def get_base_packing_price_gross(product, request):
     return product.get_base_packing_price_gross(request)
 
 
-@register.inclusion_tag('lfs/shop/lfs_form.html', takes_context=True)
-def lfs_form(context, form):
-    """ Render form using common form template.
-        It is also possible to pass list of fields
-        or single field to this tag.
-    """
-    if isinstance(form, BoundField):
-        form = [form]
-    context['lfs_form'] = form
-    context['lfs_form_is_form'] = hasattr(form, 'non_field_errors')
-    return context
-
-
-@register.filter(name='get_pay_link', is_safe=True)
-def get_pay_link(order, request=None, force_paid=False):
-    """ Only return pay link for not paid orders unless force_paid=True
-    """
-    if force_paid or order.can_be_paid():
-        return order.get_pay_link(request)
-    return ''
-
-
-@register.simple_tag(takes_context=True)
-def render_address(context, address, address_type):
-    request = context.get('request')
-    return mark_safe(address.as_html(request, type=address_type))
-
-
 @register.filter
 def clean_amount(amount, product):
     return product.get_clean_quantity(amount)
